@@ -31,12 +31,11 @@ class FocalPointPicker extends HTMLElement {
   }
 
   connectedCallback() {
-
     this.id = this.getAttribute("data-id");
     this.input = $("input", this)[0];
 
     this.imageWrap = this.closest(".media-frame-content").querySelector(
-      ".thumbnail-image",
+      ".thumbnail-image"
     );
     if (
       !this.imageWrap ||
@@ -47,8 +46,14 @@ class FocalPointPicker extends HTMLElement {
     this.imageWrap.setAttribute("data-wp-focalpoint-wrap", "");
     this.img = this.imageWrap.querySelector("img");
     this.handle = createElement(
-      `<button type="button" data-focal-point-handle></button>`,
+      `<button type="button" data-focal-point-handle></button>`
     );
+    this.handle.setAttribute("title", "Drag to change. Double-click to reset.");
+
+    // this.preview = createElement(
+    //   `<div data-focalpoint-preview style="background-image: url(${this.img.src});"></div>`
+    // );
+    // this.closest('.media-frame-content').querySelector('.attachment-details').appendChild(this.preview);
 
     if (this.img.complete) {
       this.initializeHandle();
@@ -63,6 +68,12 @@ class FocalPointPicker extends HTMLElement {
     window.addEventListener("resize", this.onResize);
     this.onResize();
 
+    $(this.handle).dblclick(() => {
+      this.setHandlePosition(0.5, 0.5);
+      this.applyFocalPointFromHandle();
+      $("#focalpoint-input").trigger("change");
+    });
+
     $(this.handle).draggable({
       cancel: false,
       containment: this.img,
@@ -71,12 +82,9 @@ class FocalPointPicker extends HTMLElement {
       },
       stop: () => {
         document.body.removeAttribute("data-wp-focalpoint-dragging");
-        $('#focalpoint-input').trigger("change");
+        $("#focalpoint-input").trigger("change");
       },
-      drag: () => {
-        const { left, top } = this.getFocalPointFromHandle();
-        $('#focalpoint-input').val(`${left} ${top}`);
-      },
+      drag: this.applyFocalPointFromHandle,
     });
   };
 
@@ -86,17 +94,18 @@ class FocalPointPicker extends HTMLElement {
       return;
     }
 
-    this.setHandlePosition();
+    const [leftPercent, topPercent] = this.input.value
+      .split(" ")
+      .map((value) => parseFloat(value) / 100);
+
+    this.setHandlePosition(leftPercent, topPercent);
   };
 
   /**
    * Set the handle position, based on the image
    */
-  setHandlePosition() {
+  setHandlePosition(leftPercent, topPercent) {
     const { img, handle } = this;
-    const [leftPercent, topPercent] = this.input.value
-      .split(" ")
-      .map((value) => parseFloat(value) / 100);
 
     const left = img.offsetLeft + img.offsetWidth * leftPercent;
     const top = img.offsetTop + img.offsetHeight * topPercent;
@@ -104,6 +113,11 @@ class FocalPointPicker extends HTMLElement {
     handle.style.setProperty("left", `${left}px`);
     handle.style.setProperty("top", `${top}px`);
   }
+
+  applyFocalPointFromHandle = () => {
+    const { left, top } = this.getFocalPointFromHandle();
+    $("#focalpoint-input").val(`${left} ${top}`);
+  };
 
   /**
    * Set the focal point from the current handle position, relative to the image
@@ -113,18 +127,12 @@ class FocalPointPicker extends HTMLElement {
     const handleRect = handle.getBoundingClientRect();
     const imgRect = img.getBoundingClientRect();
 
-    const leftPercent = (
-      ((handleRect.left - imgRect.left) / imgRect.width) *
-      100
-    ).toFixed(2);
-    const topPercent = (
-      ((handleRect.top - imgRect.top) / imgRect.height) *
-      100
-    ).toFixed(2);
+    const left = ((handleRect.left - imgRect.left) / imgRect.width).toFixed(2);
+    const top = ((handleRect.top - imgRect.top) / imgRect.height).toFixed(2);
 
     return {
-      left: leftPercent,
-      top: topPercent,
+      left: parseFloat(left) * 100,
+      top: parseFloat(top) * 100,
     };
   }
 }
