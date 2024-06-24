@@ -1,0 +1,39 @@
+[data-focal-point-handle] {
+  position: absolute;
+  z-index: 2;
+  appearance: none;
+  padding: 0;
+  border: none;
+  display: block;
+  outline: 0;
+  width: 1px;
+  height: 1px;
+  cursor: move;
+  user-select: all;
+}
+
+[data-focal-point-handle]:after {
+  content: "";
+  display: block;
+  --size: 1.2rem;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 9999px;
+  border: 3px solid #2271B1;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 0 1px white;
+}
+
+[data-wp-focalpoint-wrap] {
+  position: relative;
+}
+[data-wp-focalpoint-dragging] [data-wp-focalpoint-wrap] img {
+  outline: 1px solid rgba(0 0 0 / 0.1);
+}
+[data-wp-focalpoint-dragging] .uploader-window {
+  display: none !important;
+}
+
+.compat-field-focalpoint-input {
+  display: none !important;
+}
