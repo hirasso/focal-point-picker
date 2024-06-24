@@ -32,7 +32,7 @@ $focalPoint = get_post_meta($imageID, 'focalpoint', true);
 <style>
 #my-image {
   height: 300px;
-	width: 600px;
+  width: 600px;
   position: relative;
 }
 #my-image img {
@@ -61,10 +61,10 @@ $focalPoint = get_post_meta($imageID, 'focalpoint', true);
 
 <style>
 #my-image {
-	background-image: url('<?php echo $imageSRC[0]; ?>');
-	background-size: cover;
-	height: 300px;
-	width: 600px;
+  background-image: url('<?php echo $imageSRC[0]; ?>');
+  background-size: cover;
+  height: 300px;
+  width: 600px;
 }
 </style>
 
