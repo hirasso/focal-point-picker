@@ -6,14 +6,21 @@
   padding: 0;
   border: none;
   display: block;
-  outline: 0;
-  width: 1px;
-  height: 1px;
-  border-radius: 99999px;
-  background: white;
-  outline: 1px solid white;
+  width: 0;
+  height: 0;
   cursor: move;
   user-select: all;
+  filter: drop-shadow(1px 1px 2px rgb(0 0 0 / 0.3));
+}
+[data-focal-point-handle]::before {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 99999px;
+  background: white;
+  transform: translate(-50%, -50%);
 }
 [data-focal-point-handle]:after {
   content: "";

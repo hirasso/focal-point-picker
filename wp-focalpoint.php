@@ -3,7 +3,7 @@
 /**
  * Plugin Name: WP FocalPoint
  * Description: Set a custom focal point on every image, directly in the WP media grid
- * Version: 1.0
+ * Version: 1.1.1
  * Author: Rasso Hilber
  * Author URI: https://rassohilber.com/
  * Tested up to: 6.7
