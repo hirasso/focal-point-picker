@@ -1,6 +1,6 @@
 # WP Focal Point
 
-Zero-dependency [focal point]([url](https://en.wikipedia.org/wiki/Focus_(optics))) picker for your WordPress website. Works with older installs, too.
+Zero-dependency [focal point](<[url](https://en.wikipedia.org/wiki/Focus_(optics))>) picker for your WordPress website. Works with older installs, too.
 
 ![CleanShot 2024-06-24 at 15 18 15@2x](https://github.com/hirasso/wp-focalpoint/assets/869813/3717cedb-d1db-4192-b24d-9997e48432c9)
 
@@ -12,12 +12,12 @@ Zero-dependency [focal point]([url](https://en.wikipedia.org/wiki/Focus_(optics)
 
 ```json
 {
-	"repositories": [
+  "repositories": [
     {
       "type": "vcs",
       "url": "git@github.com:hirasso/wp-focalpoint.git"
-    },
-	],
+    }
+  ]
 }
 ```
 
