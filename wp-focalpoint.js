@@ -56,17 +56,19 @@ class FocalPointPicker extends HTMLElement {
     // this.closest('.media-frame-content').querySelector('.attachment-details').appendChild(this.preview);
 
     if (this.img.complete) {
-      this.initializeHandle();
+      this.initializeUI();
     } else {
-      this.img.addEventListener("load", this.initializeHandle, { once: true });
+      this.img.addEventListener("load", this.initializeUI, { once: true });
     }
   }
 
-  initializeHandle = () => {
+  initializeUI = () => {
     this.imageWrap.appendChild(this.handle);
 
     window.addEventListener("resize", this.onResize);
     this.onResize();
+
+    this.img.addEventListener("click", this.onImageClick);
 
     $(this.handle).dblclick(() => {
       this.setHandlePosition(0.5, 0.5);
@@ -99,6 +101,33 @@ class FocalPointPicker extends HTMLElement {
       .map((value) => parseFloat(value) / 100);
 
     this.setHandlePosition(leftPercent, topPercent);
+  };
+
+  onImageClick = (e) => {
+    const rect = this.imageWrap.getBoundingClientRect();
+    const point = {
+      x: e.x - rect.x,
+      y: e.y - rect.y,
+    };
+    $(this.handle).animate(
+      {
+        left: point.x,
+        top: point.y,
+      },
+      {
+        duration: 150,
+        complete: () => {
+          this.applyFocalPointFromHandle();
+          $("#focalpoint-input").trigger("change");
+        },
+      }
+    );
+
+    // this.handle.animate()
+    // const xPercent = (e.x - rect.x) / rect.width;
+    // const yPercent = (e.y - rect.y) / rect.height;
+    // const { xPercent, yPercent } = e;
+    // console.log({ x, y });
   };
 
   /**
