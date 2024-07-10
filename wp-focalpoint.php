@@ -59,8 +59,10 @@ class WPFocalPoint
      * Render the focal point picker field.
      * Uses custom elements for simple self-initialization
      */
-    public static function attachmentFieldsToEdit(array $fields, \WP_Post $post): array
-    {
+    public static function attachmentFieldsToEdit(
+        array $fields,
+        \WP_Post $post
+    ): array {
         if (!wp_attachment_is_image($post)) {
             return $fields;
         }

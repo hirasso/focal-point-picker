@@ -1,3 +1,8 @@
+
+.compat-field-focalpoint-input {
+  /* display: none !important; */
+}
+
 [data-focal-point-handle] {
   box-sizing: border-box;
   position: absolute;
@@ -11,6 +16,9 @@
   cursor: move;
   user-select: all;
   filter: drop-shadow(1px 1px 2px rgb(0 0 0 / 0.3));
+}
+[data-focal-point-handle]:focus {
+  outline: 0 !important;
 }
 [data-focal-point-handle]::before {
   content: "";
@@ -49,18 +57,27 @@
 [data-wp-focalpoint-dragging] .uploader-window {
   display: none !important;
 }
-.compat-field-focalpoint-input {
-  display: none !important;
-}
 
-/* [data-focalpoint-preview] {
-  position: absolute;
-  z-index: 1000;
-  width: 35%;
+[data-focalpoint-preview] {
+  position: fixed;
+  z-index: 99999999;
+  --size: 20svw;
+  width: var(--size);
+  height: calc(var(--size) / (16/9));
   box-sizing: border-box;
-  top: 0;
-  right: 0;
-  height: 100%;
-  width: 35%;
+  top: 1rem;
+  right: 1rem;
   background-size: cover;
-} */
+  border-radius: 0.3rem;
+  background-color: white;
+  box-shadow:
+    0px 0px 0px 3px white,
+    2px 2px 10px rgb(0 0 0 / 0.5);
+
+  transition-property: opacity, transform;
+  transition-duration: 200ms;
+  transition-timing-function: ease-out;
+}
+[data-focalpoint-preview]:not(.is-visible) {
+  opacity: 0;
+}
