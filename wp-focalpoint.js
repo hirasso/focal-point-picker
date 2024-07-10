@@ -1,51 +1,33 @@
-(($) => {
-  /**
-   * Wait for a certain amount of milliseconds
-   * @param {number} ms - The number of milliseconds to wait.
-   * @return {Promise<void>} A promise that resolves after the specified time has passed.
-   */
-  const wait = (ms) => {
-    return new Promise((resolve) => {
-      setTimeout(resolve, ms);
-    });
-  };
+"use strict";
 
+/**
+ * @typedef {import('jquery')} jQuery
+ * @typedef {import('jqueryui')} jQueryUI
+ */
+
+(($) => {
   /**
    * Create an element on the fly
    * @param {string} html - The HTML string to create the element from.
-   * @return {Element} The created element.
+   * @return {HTMLElement} The created element.
    */
   function createElement(html) {
     const template = document.createElement("template");
     template.innerHTML = html;
-    return template.content.children[0];
+    return /** @type {HTMLElement} */ (template.content.children[0]);
   }
 
   /**
    * Self-iniziating custom element for a native experience
    */
   class FocalPointPicker extends HTMLElement {
-    /** @var {HTMLElement[]} previews */
-    previews = [];
+    /** @type {HTMLInputElement|null} preview */
+    input = null;
+    /** @type {HTMLElement|null} preview */
+    preview = null;
 
     constructor() {
       super();
-    }
-
-    /**
-     * Create previews for landscape and portrait
-     * @return {HTMLElement[]}
-     */
-    createPreviews() {
-      const landscape = createElement(/* html */ `<div
-        data-focalpoint-preview data-landscape
-        style="background-image: url(${this.img.src});"></div>
-      `);
-      const portrait = createElement(/* html */ `<div
-        data-focalpoint-preview data-portrait
-        style="background-image: url(${this.img.src});"></div>
-      `);
-      return [landscape, portrait];
     }
 
     /**
@@ -53,15 +35,16 @@
      * @return {void}
      */
     connectedCallback() {
-      this.id = this.getAttribute("data-id");
-      this.input = $("input", this)[0];
+      this.input = /** @type {HTMLInputElement} */ this.querySelector("input");
 
       const mediaModalRoot = this.closest(".media-frame-content");
       const classicRoot = this.closest("#post-body-content");
 
       this.imageWrap = mediaModalRoot
         ? mediaModalRoot.querySelector(".thumbnail-image")
-        : classicRoot.querySelector(".wp_attachment_image p");
+        : classicRoot
+          ? classicRoot.querySelector(".wp_attachment_image p")
+          : undefined;
 
       if (
         !this.imageWrap ||
@@ -72,15 +55,24 @@
       this.imageWrap.setAttribute("data-wp-focalpoint-wrap", "");
 
       this.img = this.imageWrap.querySelector("img");
+      if (!this.img) {
+        console.error("no image found in imageWrap", this.imageWrap);
+        return;
+      }
 
       this.handle = createElement(/*html*/ `<button
-            type="button"
-            data-focal-point-handle
-            tabindex="-1"
-            title="Drag to change. Double-click to reset."></button>`);
+        role="button"
+        data-focal-point-handle
+        tabindex="-1"
+        title="Drag to change. Double-click to reset.">
+      </button>`);
 
-      this.previews = this.createPreviews();
-      this.previews.forEach((el) => document.body.appendChild(el));
+      this.preview = createElement(/* html */ `<div data-focalpoint-preview>
+        <div data-landscape></div>
+        <div data-portrait></div>
+      </div>`);
+      this.preview.style.setProperty("--image", `url(${this.img.src}`);
+      document.body.appendChild(this.preview);
 
       if (this.img.complete) {
         this.initializeUI();
@@ -90,26 +82,40 @@
     }
 
     /**
+     * Called when the element is removed from the DOM
+     * @return {void}
+     */
+    disconnectedCallback() {
+      if (this.preview) {
+        this.preview.remove();
+      }
+    }
+
+    /**
      * Initialize the user interface
      * @return {void}
      */
     initializeUI = () => {
-      this.imageWrap.appendChild(this.handle);
+      const { imageWrap, img, handle } = this;
+      if (!imageWrap || !img || !handle) {
+        return;
+      }
+      imageWrap.appendChild(handle);
 
       window.addEventListener("resize", this.onResize);
       this.onResize();
 
-      this.img.addEventListener("click", this.onImageClick);
+      img.addEventListener("click", this.onImageClick);
 
-      $(this.handle).dblclick(() => {
+      $(handle).on('dblclick', () => {
         this.setHandlePosition(0.5, 0.5);
         this.applyFocalPointFromHandle();
         $("#focalpoint-input").trigger("change");
       });
 
-      $(this.handle).draggable({
-        cancel: false,
-        containment: this.img,
+      $(handle).draggable({
+        cancel: "none",
+        containment: img,
         start: () => {
           this.togglePreview(true);
           document.body.setAttribute("data-wp-focalpoint-dragging", "");
@@ -135,7 +141,7 @@
 
       const [leftPercent, topPercent] = this.getCurrentValue();
       this.setHandlePosition(leftPercent / 100, topPercent / 100);
-      this.updatePreviews(leftPercent, topPercent);
+      this.updatePreview(leftPercent, topPercent);
     };
 
     /**
@@ -143,7 +149,21 @@
      * @return {number[]} The current focal point values [left, top].
      */
     getCurrentValue() {
-      return this.input.value.split(" ").map((value) => parseFloat(value));
+      const { input } = this;
+      if (!input) {
+        console.error("no input found", { input });
+        return [50, 50];
+      }
+      const fallback = [50, 50];
+      const inputValue = input.value.trim();
+      const values = inputValue.split(" ");
+
+      if (values.length > 2) {
+        console.error("invalid value:", inputValue);
+        return fallback;
+      }
+
+      return values.map((/** @type {string} */ value) => parseFloat(value));
     }
 
     /**
@@ -152,12 +172,17 @@
      * @return {void}
      */
     onImageClick = (e) => {
-      const rect = this.imageWrap.getBoundingClientRect();
+      const { imageWrap, handle } = this;
+      if (!imageWrap || !handle) {
+        return;
+      }
+
+      const rect = imageWrap.getBoundingClientRect();
       const point = {
         x: e.x - rect.x,
         y: e.y - rect.y,
       };
-      $(this.handle).animate(
+      $(handle).animate(
         {
           left: point.x,
           top: point.y,
@@ -165,7 +190,7 @@
         {
           duration: 150,
           progress: () => {
-            // this.updatePreviews();
+            // this.updatePreview();
           },
           complete: () => {
             this.applyFocalPointFromHandle();
@@ -184,6 +209,10 @@
     setHandlePosition(leftPercent, topPercent) {
       const { img, handle } = this;
 
+      if (!img || !handle) {
+        return;
+      }
+
       const left = img.offsetLeft + img.offsetWidth * leftPercent;
       const top = img.offsetTop + img.offsetHeight * topPercent;
 
@@ -198,7 +227,7 @@
     applyFocalPointFromHandle = () => {
       const [leftPercent, topPercent] = this.getFocalPointFromHandle();
       $("#focalpoint-input").val(`${leftPercent} ${topPercent}`);
-      this.updatePreviews(leftPercent, topPercent);
+      this.updatePreview(leftPercent, topPercent);
     };
 
     /**
@@ -207,6 +236,12 @@
      */
     getFocalPointFromHandle() {
       const { img, handle } = this;
+
+      if (!img || !handle) {
+        console.error("missing variables", { img, handle });
+        return [50, 50];
+      }
+
       const handleRect = handle.getBoundingClientRect();
       const imgRect = img.getBoundingClientRect();
 
@@ -225,10 +260,10 @@
       if (typeof visible !== "boolean") {
         throw new Error("togglePreview expects a boolean value");
       }
-      if (!this.previews.length) {
+      if (!this.preview) {
         return;
       }
-      this.previews.forEach((el) => el.classList.toggle("is-visible", visible));
+      this.preview.classList.toggle("is-visible", visible);
     }
 
     /**
@@ -237,8 +272,8 @@
      * @param {number} topPercent
      * @return {void}
      */
-    updatePreviews(leftPercent, topPercent) {
-      if (!this.previews.length) {
+    updatePreview(leftPercent, topPercent) {
+      if (!this.preview) {
         return;
       }
       if (typeof leftPercent !== "number") {
@@ -247,11 +282,10 @@
       if (typeof topPercent !== "number") {
         throw new Error("topPercent must be a number");
       }
-      this.previews.forEach((el) => {
-        el.style.backgroundPosition = `${leftPercent}% ${topPercent}%`;
-      });
+      this.preview.style.setProperty("--focal-left", `${leftPercent}%`);
+      this.preview.style.setProperty("--focal-top", `${topPercent}%`);
     }
   }
 
   customElements.define("focal-point-picker", FocalPointPicker);
-})(window.jQuery);
+})(/** @type {jQuery} */ jQuery);
