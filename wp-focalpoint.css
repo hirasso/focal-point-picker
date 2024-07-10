@@ -2,7 +2,7 @@
  * Hide the input element
  */
 .compat-field-focalpoint-input {
-  display: none !important;
+  /* display: none !important; */
 }
 
 /**

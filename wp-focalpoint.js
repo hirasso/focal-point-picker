@@ -6,6 +6,13 @@
  */
 
 (($) => {
+  function nextTick() {
+    return new Promise(resolve => {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(resolve);
+      })
+    })
+  }
   /**
    * Create an element on the fly
    * @param {string} html - The HTML string to create the element from.
@@ -25,6 +32,8 @@
     input = null;
     /** @type {HTMLElement|null} preview */
     preview = null;
+    /** @type {boolean} dragging */
+    dragging = false;
 
     constructor() {
       super();
@@ -35,6 +44,14 @@
      * @return {void}
      */
     connectedCallback() {
+      nextTick().then(this.init);
+    }
+
+    /**
+     * Initialize everything
+     * @returns {void}
+     */
+    init = () => {
       this.input = /** @type {HTMLInputElement} */ this.querySelector("input");
 
       const mediaModalRoot = this.closest(".media-frame-content");
@@ -70,6 +87,22 @@
     }
 
     /**
+     * Clean up after us the element is removed from the DOM
+     * @return {void}
+     */
+    disconnectedCallback() {
+      const { handle, preview } = this;
+      console.log('disconnected', this);
+      if (preview) {
+        preview.remove();
+      }
+      if (handle) {
+        handle.remove();
+      }
+      window.removeEventListener("resize", this.onResize);
+    }
+
+    /**
      * Creates elements outside of the custom element
      * @return {void}
      */
@@ -85,21 +118,6 @@
         <div data-landscape></div>
         <div data-portrait></div>
       </div>`);
-    }
-
-    /**
-     * Clean up after us the element is removed from the DOM
-     * @return {void}
-     */
-    disconnectedCallback() {
-      const { handle, preview } = this;
-      if (preview) {
-        preview.remove();
-      }
-      if (handle) {
-        handle.remove();
-      }
-      window.removeEventListener("resize", this.onResize);
     }
 
     /**
@@ -135,15 +153,23 @@
         $("#focalpoint-input").trigger("change");
       });
 
+      $(handle).on('mouseenter', () => this.togglePreview(true));
+      $(handle).on('mouseleave', () => {
+        if (!this.dragging) {
+          this.togglePreview(false);
+        }
+      });
+
       $(handle).draggable({
         cancel: "none",
         containment: img,
         start: () => {
+          this.dragging = true;
           this.togglePreview(true);
           document.body.setAttribute("data-wp-focalpoint-dragging", "");
         },
         stop: () => {
-          this.togglePreview(false);
+        this.dragging = false;
           document.body.removeAttribute("data-wp-focalpoint-dragging");
           $("#focalpoint-input").trigger("change");
         },
@@ -156,11 +182,6 @@
      * @return {void}
      */
     onResize = () => {
-      if (!document.contains(this)) {
-        window.removeEventListener("resize", this.onResize);
-        return;
-      }
-
       const [leftPercent, topPercent] = this.getCurrentValue();
       this.setHandlePosition(leftPercent / 100, topPercent / 100);
       this.updatePreview(leftPercent, topPercent);

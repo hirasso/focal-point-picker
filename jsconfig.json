@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
     "checkJs": true,
-    "strict": true
+    "strict": true,
+    "target": "ES6"
   },
   "include": [
     "*.js"
-  ]
+  ],
 }
