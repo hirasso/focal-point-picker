@@ -60,6 +60,20 @@
         return;
       }
 
+      this.createElements();
+
+      if (this.img.complete) {
+        this.initializeUI();
+      } else {
+        this.img.addEventListener("load", this.initializeUI, { once: true });
+      }
+    }
+
+    /**
+     * Creates elements outside of the custom element
+     * @return {void}
+     */
+    createElements() {
       this.handle = createElement(/*html*/ `<button
         role="button"
         data-focal-point-handle
@@ -71,24 +85,21 @@
         <div data-landscape></div>
         <div data-portrait></div>
       </div>`);
-      this.preview.style.setProperty("--image", `url(${this.img.src}`);
-      document.body.appendChild(this.preview);
-
-      if (this.img.complete) {
-        this.initializeUI();
-      } else {
-        this.img.addEventListener("load", this.initializeUI, { once: true });
-      }
     }
 
     /**
-     * Called when the element is removed from the DOM
+     * Clean up after us the element is removed from the DOM
      * @return {void}
      */
     disconnectedCallback() {
-      if (this.preview) {
-        this.preview.remove();
+      const { handle, preview } = this;
+      if (preview) {
+        preview.remove();
       }
+      if (handle) {
+        handle.remove();
+      }
+      window.removeEventListener("resize", this.onResize);
     }
 
     /**
@@ -96,18 +107,29 @@
      * @return {void}
      */
     initializeUI = () => {
-      const { imageWrap, img, handle } = this;
-      if (!imageWrap || !img || !handle) {
+      const { imageWrap, img, handle, preview } = this;
+
+      if (!imageWrap || !img || !handle || !preview) {
+        console.error("Some elements are missing", {
+          imageWrap,
+          img,
+          handle,
+          preview,
+        });
         return;
       }
+
       imageWrap.appendChild(handle);
+      document.body.appendChild(preview);
+
+      preview.style.setProperty("--image", `url(${img.src}`);
 
       window.addEventListener("resize", this.onResize);
       this.onResize();
 
       img.addEventListener("click", this.onImageClick);
 
-      $(handle).on('dblclick', () => {
+      $(handle).on("dblclick", () => {
         this.setHandlePosition(0.5, 0.5);
         this.applyFocalPointFromHandle();
         $("#focalpoint-input").trigger("change");

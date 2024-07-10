@@ -1,7 +1,13 @@
+/**
+ * Hide the input element
+ */
 .compat-field-focalpoint-input {
-  /* display: none !important; */
+  display: none !important;
 }
 
+/**
+ * The handle
+ */
 [data-focal-point-handle] {
   box-sizing: border-box;
   position: absolute;
@@ -57,6 +63,9 @@
   display: none !important;
 }
 
+/**
+ * The Preview
+ */
 [data-focalpoint-preview] {
   position: fixed;
   z-index: 99999999;

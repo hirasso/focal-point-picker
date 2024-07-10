@@ -3,14 +3,13 @@
 /**
  * Plugin Name: WP FocalPoint
  * Description: Set a custom focal point on every image, directly in the WP media grid
- * Version: 1.1.1
+ * Version: 1.2.0
  * Author: Rasso Hilber
  * Author URI: https://rassohilber.com/
  * Tested up to: 6.7
  * Requires PHP: 8.2
  * License: GPLv3 or later
  * License URI: http://www.gnu.org/licenses/gpl-3.0.html
- *
  */
 
 namespace RH\WPFocalPoint;
