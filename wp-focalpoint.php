@@ -10,6 +10,7 @@
  * Requires PHP: 8.2
  * License: GPLv3 or later
  * License URI: http://www.gnu.org/licenses/gpl-3.0.html
+ * GitHub Plugin URI: hirasso/wp-focalpoint
  */
 
 namespace RH\WPFocalPoint;
