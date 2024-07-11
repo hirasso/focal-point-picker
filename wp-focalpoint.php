@@ -72,6 +72,11 @@ class WPFocalPoint
 
         <focal-point-picker>
             <input type='text' readonly value="<?= $focalPoint['left'] ?> <?= $focalPoint['top'] ?>" id='focalpoint-input' name='attachments[<?= $post->ID ?>][focalpoint]'>
+            <div data-focalpoint-preview aria-hidden="true">
+                <div data-landscape></div>
+                <div data-portrait></div>
+            </div>
+            <button data-focal-point-handle aria-hidden="true" tabindex="-1" type="button" title="Drag to change. Double-click to reset."></button>
         </focal-point-picker>
 
 <?php $html = ob_get_clean();

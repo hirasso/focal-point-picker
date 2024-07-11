@@ -6,12 +6,28 @@
  */
 
 (($) => {
+  /**
+   * Wait for two animation frames
+   * @returns {Promise<void>}
+   */
   function nextTick() {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       requestAnimationFrame(() => {
-        requestAnimationFrame(resolve);
-      })
-    })
+        requestAnimationFrame(() => resolve());
+      });
+    });
+  }
+  /**
+   * Test if the current browser supports async/await
+   * @returns {boolean}
+   */
+  function supportsAsyncAwait() {
+    try {
+      new Function("return (async () => {})();");
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
   /**
    * Create an element on the fly
@@ -28,15 +44,26 @@
    * Self-iniziating custom element for a native experience
    */
   class FocalPointPicker extends HTMLElement {
-    /** @type {HTMLInputElement|null} preview */
-    input = null;
-    /** @type {HTMLElement|null} preview */
-    preview = null;
+    /** @type {HTMLInputElement} preview */
+    input;
+    /** @type {HTMLElement} preview */
+    preview;
+    /** @type {HTMLButtonElement} handle */
+    handle;
     /** @type {boolean} dragging */
     dragging = false;
 
     constructor() {
       super();
+      this.input = /** @type {!HTMLInputElement} */ (
+        this.querySelector("input")
+      );
+      this.preview = /** @type {!HTMLInputElement} */ (
+        this.querySelector("[data-focalpoint-preview]")
+      );
+      this.handle = /** @type {!HTMLButtonElement} */ (
+        this.querySelector("[data-focal-point-handle]")
+      );
     }
 
     /**
@@ -44,15 +71,23 @@
      * @return {void}
      */
     connectedCallback() {
-      nextTick().then(this.init);
+      if (!supportsAsyncAwait()) {
+        console.error("The current browser doesn't support async / await.");
+        return;
+      }
+      this.init();
     }
 
     /**
-     * Initialize everything
-     * @returns {void}
+     * Initialize everyhing when connected to the DOM
+     * @return {Promise<void>}
      */
-    init = () => {
-      this.input = /** @type {HTMLInputElement} */ this.querySelector("input");
+    async init() {
+      await nextTick();
+
+      if (!document.contains(this)) {
+        return;
+      }
 
       const mediaModalRoot = this.closest(".media-frame-content");
       const classicRoot = this.closest("#post-body-content");
@@ -77,8 +112,6 @@
         return;
       }
 
-      this.createElements();
-
       if (this.img.complete) {
         this.initializeUI();
       } else {
@@ -92,32 +125,14 @@
      */
     disconnectedCallback() {
       const { handle, preview } = this;
-      console.log('disconnected', this);
+
       if (preview) {
-        preview.remove();
+        this.appendChild(preview);
       }
       if (handle) {
-        handle.remove();
+        this.appendChild(handle);
       }
       window.removeEventListener("resize", this.onResize);
-    }
-
-    /**
-     * Creates elements outside of the custom element
-     * @return {void}
-     */
-    createElements() {
-      this.handle = createElement(/*html*/ `<button
-        role="button"
-        data-focal-point-handle
-        tabindex="-1"
-        title="Drag to change. Double-click to reset.">
-      </button>`);
-
-      this.preview = createElement(/* html */ `<div data-focalpoint-preview>
-        <div data-landscape></div>
-        <div data-portrait></div>
-      </div>`);
     }
 
     /**
@@ -127,13 +142,8 @@
     initializeUI = () => {
       const { imageWrap, img, handle, preview } = this;
 
-      if (!imageWrap || !img || !handle || !preview) {
-        console.error("Some elements are missing", {
-          imageWrap,
-          img,
-          handle,
-          preview,
-        });
+      if (!imageWrap || !img) {
+        console.error("Some elements are missing", { imageWrap, img });
         return;
       }
 
@@ -153,8 +163,8 @@
         $("#focalpoint-input").trigger("change");
       });
 
-      $(handle).on('mouseenter', () => this.togglePreview(true));
-      $(handle).on('mouseleave', () => {
+      $(handle).on("mouseenter", () => this.togglePreview(true));
+      $(handle).on("mouseleave", () => {
         if (!this.dragging) {
           this.togglePreview(false);
         }
@@ -169,7 +179,7 @@
           document.body.setAttribute("data-wp-focalpoint-dragging", "");
         },
         stop: () => {
-        this.dragging = false;
+          this.dragging = false;
           document.body.removeAttribute("data-wp-focalpoint-dragging");
           $("#focalpoint-input").trigger("change");
         },
@@ -216,7 +226,7 @@
      */
     onImageClick = (e) => {
       const { imageWrap, handle } = this;
-      if (!imageWrap || !handle) {
+      if (!imageWrap) {
         return;
       }
 
@@ -252,7 +262,7 @@
     setHandlePosition(leftPercent, topPercent) {
       const { img, handle } = this;
 
-      if (!img || !handle) {
+      if (!img) {
         return;
       }
 
@@ -280,8 +290,8 @@
     getFocalPointFromHandle() {
       const { img, handle } = this;
 
-      if (!img || !handle) {
-        console.error("missing variables", { img, handle });
+      if (!img) {
+        console.error("missing image", { img });
         return [50, 50];
       }
 
