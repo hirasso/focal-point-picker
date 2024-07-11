@@ -71,12 +71,16 @@ class WPFocalPoint
         ob_start() ?>
 
         <focal-point-picker>
-            <input type='text' readonly value="<?= $focalPoint['left'] ?> <?= $focalPoint['top'] ?>" id='focalpoint-input' name='attachments[<?= $post->ID ?>][focalpoint]'>
-            <div data-focalpoint-preview aria-hidden="true">
-                <div data-landscape></div>
-                <div data-portrait></div>
+            <div data-focalpoint-input-wrap>
+                <input data-focalpoint-input type='text' readonly value="<?= $focalPoint['left'] ?> <?= $focalPoint['top'] ?>" id='focalpoint-input' name='attachments[<?= $post->ID ?>][focalpoint]'>
+                <button data-focalpoint-reset type="button" class="button-primary">Reset</button>
             </div>
-            <button data-focal-point-handle aria-hidden="true" tabindex="-1" type="button" title="Drag to change. Double-click to reset."></button>
+
+            <div data-focalpoint-preview aria-hidden="true">
+                <div data-portrait></div>
+                <div data-landscape></div>
+            </div>
+            <button data-focalpoint-handle aria-hidden="true" tabindex="-1" type="button" title="Drag to change. Double-click to reset."></button>
         </focal-point-picker>
 
 <?php $html = ob_get_clean();

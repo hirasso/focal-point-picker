@@ -6,9 +6,32 @@
 }
 
 /**
+ * Hidden elements if not initialized
+ */
+focal-point-picker [data-focalpoint-handle],
+focal-point-picker [data-focalpoint-preview] {
+  display: none;
+}
+
+/**
+ * The input element
+ */
+[data-focalpoint-input-wrap] {
+  display: flex;
+  gap: 0.5rem;
+}
+[data-focalpoint-input-wrap] > * {
+  flex: 1;
+}
+[data-focalpoint-reset] {
+  cursor: pointer;
+  max-width: fit-content;
+}
+
+/**
  * The handle
  */
-[data-focal-point-handle] {
+[data-focalpoint-handle] {
   box-sizing: border-box;
   position: absolute;
   z-index: 2;
@@ -22,10 +45,10 @@
   user-select: all;
   filter: drop-shadow(1px 1px 2px rgb(0 0 0 / 0.3));
 }
-[data-focal-point-handle]:focus {
+[data-focalpoint-handle]:focus {
   outline: 0 !important;
 }
-[data-focal-point-handle]::before {
+[data-focalpoint-handle]::before {
   content: "";
   display: block;
   position: absolute;
@@ -35,7 +58,7 @@
   background: white;
   transform: translate(-50%, -50%);
 }
-[data-focal-point-handle]:after {
+[data-focalpoint-handle]:after {
   content: "";
   display: block;
   --size: 1.2rem;
@@ -71,7 +94,7 @@
   z-index: 99999999;
   --size: 20svw;
   width: var(--size);
-  top: 0;
+  bottom: 0;
   right: 0;
   box-sizing: border-box;
   padding: 1rem;

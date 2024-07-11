@@ -50,6 +50,8 @@
     preview;
     /** @type {HTMLButtonElement} handle */
     handle;
+    /** @type {HTMLButtonElement} resetButton */
+    resetButton;
     /** @type {boolean} dragging */
     dragging = false;
 
@@ -62,7 +64,10 @@
         this.querySelector("[data-focalpoint-preview]")
       );
       this.handle = /** @type {!HTMLButtonElement} */ (
-        this.querySelector("[data-focal-point-handle]")
+        this.querySelector("[data-focalpoint-handle]")
+      );
+      this.resetButton = /** @type {!HTMLButtonElement} */ (
+        this.querySelector("[data-focalpoint-reset]")
       );
     }
 
@@ -124,13 +129,19 @@
      * @return {void}
      */
     disconnectedCallback() {
-      const { handle, preview } = this;
+      const { handle, preview, img, resetButton } = this;
 
       if (preview) {
         this.appendChild(preview);
       }
       if (handle) {
         this.appendChild(handle);
+      }
+      if (img) {
+        img.removeEventListener("click", this.onImageClick);
+      }
+      if (resetButton) {
+        resetButton.removeEventListener("click", this.reset);
       }
       window.removeEventListener("resize", this.onResize);
     }
@@ -140,7 +151,7 @@
      * @return {void}
      */
     initializeUI = () => {
-      const { imageWrap, img, handle, preview } = this;
+      const { imageWrap, img, handle, preview, resetButton } = this;
 
       if (!imageWrap || !img) {
         console.error("Some elements are missing", { imageWrap, img });
@@ -156,12 +167,9 @@
       this.onResize();
 
       img.addEventListener("click", this.onImageClick);
+      resetButton.addEventListener("click", this.reset);
 
-      $(handle).on("dblclick", () => {
-        this.setHandlePosition(0.5, 0.5);
-        this.applyFocalPointFromHandle();
-        $("#focalpoint-input").trigger("change");
-      });
+      $(handle).on("dblclick", this.reset);
 
       $(handle).on("mouseenter", () => this.togglePreview(true));
       $(handle).on("mouseleave", () => {
@@ -254,6 +262,15 @@
     };
 
     /**
+     * Resets the focal point
+     */
+    reset = () => {
+      this.setHandlePosition(0.5, 0.5);
+      this.applyFocalPointFromHandle();
+      $("#focalpoint-input").trigger("change");
+    };
+
+    /**
      * Set the handle position, based on the image
      * @param {number} leftPercent - The left position as a percentage.
      * @param {number} topPercent - The top position as a percentage.
@@ -298,10 +315,20 @@
       const handleRect = handle.getBoundingClientRect();
       const imgRect = img.getBoundingClientRect();
 
-      return [
+      const point = [
         (handleRect.left - imgRect.left) / imgRect.width,
         (handleRect.top - imgRect.top) / imgRect.height,
-      ].map((number) => parseFloat((number * 100).toFixed(2)));
+      ].map((value) => {
+        /** We want percentages */
+        value *= 100;
+        /** Round if close to 50 */
+        if (Math.abs(value - 50) < 2) {
+          value = 50;
+        }
+        return value;
+      });
+
+      return point.map((number) => parseFloat(number.toFixed(2)));
     }
 
     /**
