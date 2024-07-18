@@ -73,7 +73,7 @@ class WPFocalPoint
         <focal-point-picker>
             <div data-focalpoint-input-wrap>
                 <input data-focalpoint-input type='text' readonly value="<?= $focalPoint['left'] ?> <?= $focalPoint['top'] ?>" id='focalpoint-input' name='attachments[<?= $post->ID ?>][focalpoint]'>
-                <button data-focalpoint-reset type="button" class="button-primary">Reset</button>
+                <button data-focalpoint-reset disabled type="button" class="button-primary">Reset</button>
             </div>
 
             <div data-focalpoint-preview aria-hidden="true">

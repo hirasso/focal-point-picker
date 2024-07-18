@@ -54,6 +54,7 @@
     resetButton;
     /** @type {boolean} dragging */
     dragging = false;
+    defaultValue = [50, 50];
 
     constructor() {
       super();
@@ -143,7 +144,7 @@
       if (resetButton) {
         resetButton.removeEventListener("click", this.reset);
       }
-      window.removeEventListener("resize", this.onResize);
+      window.removeEventListener("resize", this.updateUIFromValue);
     }
 
     /**
@@ -163,8 +164,8 @@
 
       preview.style.setProperty("--image", `url(${img.src}`);
 
-      window.addEventListener("resize", this.onResize);
-      this.onResize();
+      window.addEventListener("resize", this.updateUIFromValue);
+      this.updateUIFromValue();
 
       img.addEventListener("click", this.onImageClick);
       resetButton.addEventListener("click", this.reset);
@@ -199,10 +200,11 @@
      * Handle window resize event
      * @return {void}
      */
-    onResize = () => {
+    updateUIFromValue = () => {
       const [leftPercent, topPercent] = this.getCurrentValue();
       this.setHandlePosition(leftPercent / 100, topPercent / 100);
       this.updatePreview(leftPercent, topPercent);
+      this.adjustResetButton(leftPercent, topPercent);
     };
 
     /**
@@ -213,15 +215,15 @@
       const { input } = this;
       if (!input) {
         console.error("no input found", { input });
-        return [50, 50];
+        return this.defaultValue;
       }
-      const fallback = [50, 50];
+
       const inputValue = input.value.trim();
       const values = inputValue.split(" ");
 
       if (values.length > 2) {
         console.error("invalid value:", inputValue);
-        return fallback;
+        return this.defaultValue;
       }
 
       return values.map((/** @type {string} */ value) => parseFloat(value));
@@ -295,10 +297,33 @@
      * @return {void}
      */
     applyFocalPointFromHandle = () => {
-      const [leftPercent, topPercent] = this.getFocalPointFromHandle();
-      $("#focalpoint-input").val(`${leftPercent} ${topPercent}`);
-      this.updatePreview(leftPercent, topPercent);
+      const [left, top] = this.getFocalPointFromHandle();
+      $("#focalpoint-input").val(`${left} ${top}`);
+      this.updatePreview(left, top);
+      this.adjustResetButton(left, top);
     };
+
+    /**
+    * Check if a value is equal to the default value
+    * @param {number} left
+    * @param {number} top
+    * @return {void}
+    */
+    adjustResetButton(left, top) {
+      if (this.resetButton) {
+        this.resetButton.disabled = this.isDefaultValue(left, top);
+      }
+    };
+
+    /**
+     * Check if a value is equal to the default value
+     * @param {number} left
+     * @param {number} top
+     * @return {boolean}
+     */
+    isDefaultValue(left, top) {
+      return left === this.defaultValue[0] && top === this.defaultValue[1];
+    }
 
     /**
      * Get the focal point from the handle position
@@ -309,7 +334,7 @@
 
       if (!img) {
         console.error("missing image", { img });
-        return [50, 50];
+        return this.defaultValue;
       }
 
       const handleRect = handle.getBoundingClientRect();
