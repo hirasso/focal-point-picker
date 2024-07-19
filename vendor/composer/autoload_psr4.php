@@ -6,5 +6,5 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'WPFocalPoint\\' => array($baseDir . '/src'),
+    'FocalPointPicker\\' => array($baseDir . '/src'),
 );

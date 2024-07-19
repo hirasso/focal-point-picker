@@ -71,18 +71,18 @@ focal-point-picker [data-focalpoint-preview] {
     0 0 0 3px #2271b1,
     0 0 0 4px white;
 }
-[data-wp-focalpoint-wrap] {
+[data-fcp-wrap] {
   position: relative;
 }
-[data-wp-focalpoint-wrap] img {
+[data-fcp-wrap] img {
   cursor: crosshair;
   position: relative;
   z-index: 2;
 }
-[data-wp-focalpoint-dragging] [data-wp-focalpoint-wrap] img {
+[data-fcp-dragging] [data-fcp-wrap] img {
   outline: 1px solid rgba(0 0 0 / 0.1);
 }
-[data-wp-focalpoint-dragging] .uploader-window {
+[data-fcp-dragging] .uploader-window {
   display: none !important;
 }
 

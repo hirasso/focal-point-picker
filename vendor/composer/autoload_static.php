@@ -7,14 +7,14 @@ namespace Composer\Autoload;
 class ComposerStaticInit95dbc0b359935c95105cffa056f94fd3
 {
     public static $prefixLengthsPsr4 = array (
-        'W' => 
+        'F' => 
         array (
-            'WPFocalPoint\\' => 13,
+            'FocalPointPicker\\' => 17,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'WPFocalPoint\\' => 
+        'FocalPointPicker\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
         ),

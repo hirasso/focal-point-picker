@@ -1,12 +1,12 @@
 {
-  "name": "hirasso/wp-focalpoint",
+  "name": "hirasso/focal-point-picker",
   "type": "wordpress-muplugin",
   "require": {
     "php": ">=8.2"
   },
   "autoload": {
     "psr-4": {
-      "WPFocalPoint\\": ["src"]
+      "FocalPointPicker\\": ["src"]
     }
   },
   "authors": [

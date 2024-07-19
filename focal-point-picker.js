@@ -106,11 +106,11 @@
 
       if (
         !this.imageWrap ||
-        this.imageWrap.hasAttribute("data-wp-focalpoint-wrap")
+        this.imageWrap.hasAttribute("data-fcp-wrap")
       ) {
         return;
       }
-      this.imageWrap.setAttribute("data-wp-focalpoint-wrap", "");
+      this.imageWrap.setAttribute("data-fcp-wrap", "");
 
       this.img = this.imageWrap.querySelector("img");
       if (!this.img) {
@@ -185,12 +185,12 @@
         start: () => {
           this.dragging = true;
           this.togglePreview(true);
-          document.body.setAttribute("data-wp-focalpoint-dragging", "");
+          document.body.setAttribute("data-fcp-dragging", "");
         },
         stop: () => {
           this.dragging = false;
           this.togglePreview(false);
-          document.body.removeAttribute("data-wp-focalpoint-dragging");
+          document.body.removeAttribute("data-fcp-dragging");
           $(this.input).trigger("change");
         },
         drag: this.applyFocalPointFromHandle,

@@ -4,11 +4,11 @@
  * https://rassohilber.com
  */
 
-namespace WPFocalPoint;
+namespace FocalPointPicker;
 
 use WP_Post;
 
-class WPFocalPoint
+class FocalPointPicker
 {
     public static function init()
     {
@@ -23,8 +23,8 @@ class WPFocalPoint
      */
     public static function enqueueAssets(): void
     {
-        wp_enqueue_style('wp-focalpoint-css', self::assetUri('/wp-focalpoint.css'), [], null);
-        wp_enqueue_script('wp-focalpoint-js', self::assetUri('/wp-focalpoint.js'), ['jquery', 'jquery-ui-draggable'], null, true);
+        wp_enqueue_style('focal-point-picker-css', self::assetUri('/focal-point-picker.css'), [], null);
+        wp_enqueue_script('focal-point-picker-js', self::assetUri('/focal-point-picker.js'), ['jquery', 'jquery-ui-draggable'], null, true);
     }
 
     /**
@@ -53,7 +53,7 @@ class WPFocalPoint
         if (!wp_attachment_is_image($post)) {
             return $fields;
         }
-        $focalPoint = self::getFocalPoint($post);
+        $focalPoint = new FocalPoint($post);
 
         ob_start() ?>
 
