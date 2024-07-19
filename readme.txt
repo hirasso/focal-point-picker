@@ -56,7 +56,7 @@ var_dump($focalPoint);</pre>
 
 $imageID = 1234;
 $imageSRC = wp_get_attachment_image_src($imageID)['large'];
-$focalPoint = fcp_get_focalpoint($imageID);
+$focus = fcp_get_focalpoint($imageID);
 
 ?>
 
@@ -75,7 +75,9 @@ $focalPoint = fcp_get_focalpoint($imageID);
 </style>
 
 <div id="my-image">
-  <img src="<?= $imageSRC[0] ?>" style="object-position: <?= $focusPoint->leftPercent ?? 50 ?>% <?= $focusPoint->topPercent ?? 50 ?>%;">
+  <img
+    src="<?= $imageSRC[0] ?>"
+    style="object-position: <?= $focus->leftPercent ?? 50 ?>% <?= $focus->topPercent ?? 50 ?>%;">
 </div></pre>
 
 = Background Position =
@@ -84,7 +86,7 @@ $focalPoint = fcp_get_focalpoint($imageID);
 
 $imageID = 1234;
 $imageSRC = wp_get_attachment_image_src($imageID)['large'];
-$focalPoint = fcp_get_focalpoint($imageID);
+$focus = fcp_get_focalpoint($imageID);
 
 ?>
 
@@ -97,4 +99,7 @@ $focalPoint = fcp_get_focalpoint($imageID);
 }
 </style>
 
-<div id="my-image" style="background-position: <?= $focalPoint->leftPercent ?? 50 ?>% <?= $focalPoint->topPercent ?? 50 ?>%;"></div></pre>
+<div
+  id="my-image"
+  style="background-position: <?= $focus->leftPercent ?? 50 ?>% <?= $focus->topPercent ?? 50 ?>%;">
+</div></pre>
