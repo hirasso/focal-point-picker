@@ -54,7 +54,7 @@
     resetButton;
     /** @type {boolean} dragging */
     dragging = false;
-    defaultValue = [50, 50];
+    defaultValue = [0.5, 0.5];
 
     constructor() {
       super();
@@ -172,12 +172,12 @@
 
       $(handle).on("dblclick", this.reset);
 
-      $(handle).on("mouseenter", () => this.togglePreview(true));
-      $(handle).on("mouseleave", () => {
-        if (!this.dragging) {
-          this.togglePreview(false);
-        }
-      });
+      // $(handle).on("mouseenter", () => this.togglePreview(true));
+      // $(handle).on("mouseleave", () => {
+      //   if (!this.dragging) {
+      //     this.togglePreview(false);
+      //   }
+      // });
 
       $(handle).draggable({
         cancel: "none",
@@ -189,8 +189,9 @@
         },
         stop: () => {
           this.dragging = false;
+          this.togglePreview(false);
           document.body.removeAttribute("data-wp-focalpoint-dragging");
-          $("#focalpoint-input").trigger("change");
+          $(this.input).trigger("change");
         },
         drag: this.applyFocalPointFromHandle,
       });
@@ -201,10 +202,10 @@
      * @return {void}
      */
     updateUIFromValue = () => {
-      const [leftPercent, topPercent] = this.getCurrentValue();
-      this.setHandlePosition(leftPercent / 100, topPercent / 100);
-      this.updatePreview(leftPercent, topPercent);
-      this.adjustResetButton(leftPercent, topPercent);
+      const [left, top] = this.getCurrentValue();
+      this.setHandlePosition(left, top);
+      this.updatePreview(left, top);
+      this.adjustResetButton(left, top);
     };
 
     /**
@@ -226,7 +227,13 @@
         return this.defaultValue;
       }
 
-      return values.map((/** @type {string} */ value) => parseFloat(value));
+      return values.map(function (/** @type {string} */ value) {
+        let number = parseFloat(value);
+        if (number > 1) {
+          number /= 100;
+        }
+        return parseFloat(number.toFixed(2));
+      });
     }
 
     /**
@@ -241,55 +248,69 @@
       }
 
       const rect = imageWrap.getBoundingClientRect();
-      const point = {
-        x: e.x - rect.x,
-        y: e.y - rect.y,
-      };
-      $(handle).animate(
-        {
-          left: point.x,
-          top: point.y,
-        },
-        {
-          duration: 150,
-          progress: () => {
-            // this.updatePreview();
-          },
-          complete: () => {
-            this.applyFocalPointFromHandle();
-            $("#focalpoint-input").trigger("change");
-          },
-        },
-      );
+
+      this.animateHandle(e.x - rect.x, e.y - rect.y).then(() => {
+        this.applyFocalPointFromHandle();
+        $(this.input).trigger("change");
+      });
     };
+
+    /**
+     * Animate the handle to a position and apply the new point
+     * after the animation
+     * @param {number} left
+     * @param {number} top
+     */
+    animateHandle(left, top) {
+      return /** @type {Promise<void>} */ (
+        new Promise((resolve, reject) => {
+          $(this.handle).animate(
+            { left, top },
+            {
+              duration: 200,
+              complete: resolve,
+            },
+          );
+        })
+      );
+    }
 
     /**
      * Resets the focal point
      */
     reset = () => {
-      this.setHandlePosition(0.5, 0.5);
-      this.applyFocalPointFromHandle();
-      $("#focalpoint-input").trigger("change");
+      const rect = this.imageWrap?.getBoundingClientRect();
+      if (!rect) {
+        console.error("Something went wrong while getting the image rect");
+        return;
+      }
+      this.animateHandle(rect.width / 2, rect.height / 2).then(() => {
+        this.setHandlePosition(0.5, 0.5);
+        this.applyFocalPointFromHandle();
+        $(this.input).trigger("change");
+      });
     };
 
     /**
      * Set the handle position, based on the image
-     * @param {number} leftPercent - The left position as a percentage.
-     * @param {number} topPercent - The top position as a percentage.
+     * @param {number} left - The left position as a number between 0-1.
+     * @param {number} top - The top position as a number between 0-1.
      * @return {void}
      */
-    setHandlePosition(leftPercent, topPercent) {
+    setHandlePosition(left, top) {
       const { img, handle } = this;
 
       if (!img) {
         return;
       }
 
-      const left = img.offsetLeft + img.offsetWidth * leftPercent;
-      const top = img.offsetTop + img.offsetHeight * topPercent;
+      const point = {
+        left: img.offsetLeft + img.offsetWidth * left,
+        top: img.offsetTop + img.offsetHeight * top,
+      };
 
-      handle.style.setProperty("left", `${left}px`);
-      handle.style.setProperty("top", `${top}px`);
+      handle.style.setProperty("left", `${point.left}px`);
+      handle.style.setProperty("top", `${point.top}px`);
     }
 
     /**
@@ -298,22 +319,31 @@
      */
     applyFocalPointFromHandle = () => {
       const [left, top] = this.getFocalPointFromHandle();
-      $("#focalpoint-input").val(`${left} ${top}`);
+      this.updateInput(left, top);
       this.updatePreview(left, top);
       this.adjustResetButton(left, top);
     };
 
     /**
-    * Check if a value is equal to the default value
-    * @param {number} left
-    * @param {number} top
-    * @return {void}
-    */
+     * Update the input
+     * @param {number} left
+     * @param {number} top
+     */
+    updateInput(left, top) {
+      this.input.value = `${left} ${top}`;
+    }
+
+    /**
+     * Check if a value is equal to the default value
+     * @param {number} left
+     * @param {number} top
+     * @return {void}
+     */
     adjustResetButton(left, top) {
       if (this.resetButton) {
         this.resetButton.disabled = this.isDefaultValue(left, top);
       }
-    };
+    }
 
     /**
      * Check if a value is equal to the default value
@@ -343,15 +373,7 @@
       const point = [
         (handleRect.left - imgRect.left) / imgRect.width,
         (handleRect.top - imgRect.top) / imgRect.height,
-      ].map((value) => {
-        /** We want percentages */
-        value *= 100;
-        /** Round if close to 50 */
-        if (Math.abs(value - 50) < 2) {
-          value = 50;
-        }
-        return value;
-      });
+      ];
 
       return point.map((number) => parseFloat(number.toFixed(2)));
     }
@@ -373,22 +395,24 @@
 
     /**
      * Set the preview position
-     * @param {number} leftPercent
-     * @param {number} topPercent
+     * @param {number} left
+     * @param {number} top
      * @return {void}
      */
-    updatePreview(leftPercent, topPercent) {
+    updatePreview(left, top) {
       if (!this.preview) {
         return;
       }
-      if (typeof leftPercent !== "number") {
-        throw new Error("leftPercent must be a number");
+      if (typeof left !== "number") {
+        console.error("'left' must be a number:", left);
+        return;
       }
-      if (typeof topPercent !== "number") {
-        throw new Error("topPercent must be a number");
+      if (typeof top !== "number") {
+        console.error("'top' must be a number:", top);
+        return;
       }
-      this.preview.style.setProperty("--focal-left", `${leftPercent}%`);
-      this.preview.style.setProperty("--focal-top", `${topPercent}%`);
+      this.preview.style.setProperty("--focal-left", `${left * 100}%`);
+      this.preview.style.setProperty("--focal-top", `${top * 100}%`);
     }
   }
 

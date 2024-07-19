@@ -4,10 +4,15 @@
   "require": {
     "php": ">=8.2"
   },
+  "autoload": {
+    "psr-4": {
+      "WPFocalPoint\\": ["src"]
+    }
+  },
   "authors": [
       {
           "name": "Rasso Hilber",
           "email": "mail@rassohilber.com"
       }
-  ],
+  ]
 }
