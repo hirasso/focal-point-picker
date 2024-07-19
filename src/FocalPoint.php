@@ -17,7 +17,8 @@ final class FocalPoint
     public float $leftPercent;
     public float $topPercent;
 
-    public function __construct(WP_Post|int $post) {
+    public function __construct(WP_Post|int $post)
+    {
         $post = get_post($post);
 
         if (!wp_attachment_is_image($post)) {
@@ -38,11 +39,15 @@ final class FocalPoint
      */
     private function sanitize(mixed $value): float
     {
-        if (empty($value)) $value = 0.5;
+        if (empty($value)) {
+            $value = 0.5;
+        }
 
         $value = floatval($value);
 
-        if ($value > 1) $value /= 100;
+        if ($value > 1) {
+            $value /= 100;
+        }
 
         return round($value, 2);
     }

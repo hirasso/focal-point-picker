@@ -1,1 +1,9 @@
+# system files
 .DS_Store
+# npm packages
+node_modules
+# composer packages
+vendor
+# This way, we can still use composers autoload for our own files:
+!vendor/composer
+!vendor/autoload.php

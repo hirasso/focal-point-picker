@@ -72,12 +72,12 @@ class FocalPointPicker
 
 <?php $html = ob_get_clean();
 
-        $fields['focalpoint-input'] = array(
+        $fields['focalpoint-input'] = [
             'label' => __('Focal Point'),
             'helps' => __(''),
             'input'  => 'html',
-            'html' => $html
-        );
+            'html' => $html,
+        ];
 
         return $fields;
     }
@@ -88,7 +88,9 @@ class FocalPointPicker
     public static function saveAttachment(int $attachment_id)
     {
         $value = trim($_REQUEST['attachments'][$attachment_id]['focalpoint'] ?? '');
-        if (empty($value)) return;
+        if (empty($value)) {
+            return;
+        }
 
         [$left, $top] = array_map('floatval', explode(' ', $value));
 
@@ -118,7 +120,8 @@ class FocalPointPicker
      * Get the focal point of an image.
      * e.g. ['left' => 0.5, 'top' => 0.5]
      */
-    public static function getFocalPoint(WP_Post|int $post): FocalPoint {
+    public static function getFocalPoint(WP_Post|int $post): FocalPoint
+    {
         return new FocalPoint($post);
     }
 }

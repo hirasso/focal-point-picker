@@ -16,7 +16,9 @@
 use FocalPointPicker\FocalPointPicker;
 use FocalPointPicker\FocalPoint;
 
-if (!defined('ABSPATH')) exit; // Exit if accessed directly
+if (!defined('ABSPATH')) {
+    exit;
+} // Exit if accessed directly
 
 define('WPFP_PLUGIN_URI', untrailingslashit(plugin_dir_url(__FILE__)));
 define('WPFP_PLUGIN_DIR', untrailingslashit(__DIR__));
@@ -29,7 +31,8 @@ FocalPointPicker::init();
  * Helper function to retrieve a focal point for an image
  */
 if (!function_exists('fcp_get_focalpoint')) {
-    function fcp_get_focalpoint(WP_Post|int $post) {
+    function fcp_get_focalpoint(WP_Post|int $post)
+    {
         return new FocalPoint($post);
     }
 }
