@@ -1,4 +1,4 @@
-=== WP Focal Point ===
+=== focal-point-picker ===
 
 Zero-dependency [focal point](<[url](https://en.wikipedia.org/wiki/Focus_(optics))>) picker for your WordPress website. Works with older installs, too.
 
