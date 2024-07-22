@@ -13,8 +13,8 @@
  * GitHub Plugin URI: hirasso/focal-point-picker
  */
 
-use FocalPointPicker\FocalPointPicker;
-use FocalPointPicker\FocalPoint;
+use Hirasso\FocalPointPicker\FocalPointPicker;
+use Hirasso\FocalPointPicker\FocalPoint;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -23,7 +23,9 @@ if (!defined('ABSPATH')) {
 define('WPFP_PLUGIN_URI', untrailingslashit(plugin_dir_url(__FILE__)));
 define('WPFP_PLUGIN_DIR', untrailingslashit(__DIR__));
 
-require_once dirname(__FILE__) . '/vendor/autoload.php';
+if (is_readable(__DIR__ . '/vendor/autoload.php')) {
+    require_once __DIR__ . '/vendor/autoload.php';
+}
 
 FocalPointPicker::init();
 

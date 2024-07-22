@@ -4,7 +4,7 @@
  * https://rassohilber.com
  */
 
-namespace FocalPointPicker;
+namespace Hirasso\FocalPointPicker;
 
 use InvalidArgumentException;
 use WP_Post;

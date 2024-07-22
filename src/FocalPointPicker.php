@@ -4,7 +4,7 @@
  * https://rassohilber.com
  */
 
-namespace FocalPointPicker;
+namespace Hirasso\FocalPointPicker;
 
 use WP_Post;
 
@@ -13,7 +13,7 @@ class FocalPointPicker
     public static function init()
     {
         add_filter('attachment_fields_to_edit', [self::class, 'attachmentFieldsToEdit'], 10, 2);
-        add_action('edit_attachment', [self::class, 'saveAttachment']);
+        add_action('attachment_fields_to_save', [self::class, 'attachmentFieldsToSave'], 10, 2);
         add_filter('wp_get_attachment_image_attributes', [self::class, 'filterAttachmentImageAttributes'], 10, 2);
         add_action('admin_enqueue_scripts', [self::class, 'enqueueAssets']);
     }
@@ -84,16 +84,49 @@ class FocalPointPicker
     /**
      * Save the focal point
      */
-    public static function saveAttachment(int $attachment_id)
-    {
-        $value = trim($_REQUEST['attachments'][$attachment_id]['focalpoint'] ?? '');
-        if (empty($value)) {
-            return;
+    public static function attachmentFieldsToSave(
+        array $post,
+        array $attachmentData
+    ) {
+        $id = $post['ID'] ?? '';
+        check_ajax_referer('update-post_' . $id, 'nonce');
+
+        if (!wp_attachment_is_image($id)) {
+            return $post;
         }
 
-        [$left, $top] = array_map('floatval', explode(' ', $value));
+        $focalPoint = array_map(
+            'trim',
+            explode(' ', $attachmentData['focalpoint'] ?? '')
+        );
 
-        update_post_meta($attachment_id, 'focalpoint', compact('left', 'top'));
+        /** Validation: Array of two? */
+        if (count($focalPoint) !== 2) {
+            return $post;
+        }
+
+        /** Validation: All numeric? */
+        foreach ($focalPoint as $value) {
+            if (!is_numeric($value)) {
+                return $post;
+            }
+        }
+
+        [$left, $top] = array_map('floatval', $focalPoint);
+
+        $post = array_replace_recursive(
+            $post,
+            [
+                'meta_input' => [
+                    'focalpoint' => [
+                        'left' => $left,
+                        'top' => $top,
+                    ],
+                ],
+            ]
+        );
+
+        return $post;
     }
 
     /**

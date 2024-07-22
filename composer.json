@@ -1,21 +1,31 @@
 {
-  "name": "hirasso/focal-point-picker",
-  "type": "wordpress-muplugin",
-  "require": {
-    "php": ">=8.2"
-  },
-  "autoload": {
-    "psr-4": {
-      "FocalPointPicker\\": ["src"]
+    "name": "hirasso/focal-point-picker",
+    "description": "Set a custom focal point for your images, directly in the WP media grid",
+    "type": "wordpress-plugin",
+    "license": "GPLv3 or later",
+    "autoload": {
+        "psr-4": {
+            "Hirasso\\FocalPointPicker\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Rasso Hilber",
+            "email": "mail@rassohilber.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+      "php": ">=8.2",
+        "composer/installers": "^2.3"
+    },
+    "require-dev": {
+        "symfony/var-dumper": "^7.1",
+        "friendsofphp/php-cs-fixer": "^3.59"
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true
+        }
     }
-  },
-  "authors": [
-      {
-          "name": "Rasso Hilber",
-          "email": "mail@rassohilber.com"
-      }
-  ],
-  "require-dev": {
-    "friendsofphp/php-cs-fixer": "^3.59"
-  }
 }
