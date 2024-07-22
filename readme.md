@@ -14,7 +14,11 @@ Zero-dependency [focal point](<[url](https://en.wikipedia.org/wiki/Focus_(optics
 composer require hirasso/focal-point-picker
 ```
 
-2. Activate the plugin using `wp plugin activatea hirasso/focal-point-picker` – Done!
+1. Activate the plugin manually or using WP CLI:
+
+```shell
+wp plugin activate hirasso/focal-point-picker
+```
 
 ### Manually:
 
