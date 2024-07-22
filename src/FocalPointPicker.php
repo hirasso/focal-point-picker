@@ -74,7 +74,6 @@ class FocalPointPicker
 
         $fields['focalpoint-input'] = [
             'label' => __('Focal Point'),
-            'helps' => __(''),
             'input'  => 'html',
             'html' => $html,
         ];
