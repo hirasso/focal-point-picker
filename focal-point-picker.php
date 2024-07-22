@@ -8,7 +8,7 @@
  * Author URI: https://rassohilber.com/
  * Tested up to: 6.7
  * Requires PHP: 8.2
- * License: GPLv3 or later
+ * License: GPL-3.0-or-later
  * License URI: http://www.gnu.org/licenses/gpl-3.0.html
  * GitHub Plugin URI: hirasso/focal-point-picker
  */
