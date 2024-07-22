@@ -1,8 +1,10 @@
 <?php
 
 $finder = PhpCsFixer\Finder::create()
-    ->in([
-        './',
+    ->in(__DIR__)
+    ->exclude([
+        'vendor',
+        'node_modules',
     ]);
 
 return (new PhpCsFixer\Config())
