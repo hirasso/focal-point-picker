@@ -8,20 +8,13 @@ Zero-dependency [focal point](<[url](https://en.wikipedia.org/wiki/Focus_(optics
 
 ### Via Composer (recommended):
 
-1. You'll need a custom entry in the `repositories` array in your `composer.json`:
+1. Install the plugin:
 
-```json
-{
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "git@github.com:hirasso/focal-point-picker.git"
-    }
-  ]
-}
+```shell
+composer require hirasso/focal-point-picker
 ```
 
-2. Run `composer require hirasso/focal-point-picker` in your terminal – Done!
+2. Activate the plugin using `wp plugin activatea hirasso/focal-point-picker` – Done!
 
 ### Manually:
 

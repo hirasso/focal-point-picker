@@ -1,0 +1,4 @@
+.* export-ignore
+package.json export-ignore
+pnpm-lock.yaml export-ignore
+readme.txt export-ignore
