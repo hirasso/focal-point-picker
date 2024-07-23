@@ -3,11 +3,6 @@
     "description": "A WordPress plugin to set a custom focal point for your images, directly in the WP media grid",
     "type": "wordpress-plugin",
     "license": "GPL-3.0-or-later",
-    "autoload": {
-        "psr-4": {
-            "Hirasso\\FocalPointPicker\\": "src/"
-        }
-    },
     "authors": [
         {
             "name": "Rasso Hilber",
