@@ -2,3 +2,6 @@
 package.json export-ignore
 pnpm-lock.yaml export-ignore
 readme.txt export-ignore
+composer.lock export-ignore
+composer.json export-ignore
+jsconfig.json export-ignore

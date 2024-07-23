@@ -23,9 +23,45 @@ if (!defined('ABSPATH')) {
 define('WPFP_PLUGIN_URI', untrailingslashit(plugin_dir_url(__FILE__)));
 define('WPFP_PLUGIN_DIR', untrailingslashit(__DIR__));
 
-if (is_readable(__DIR__ . '/vendor/autoload.php')) {
-    require_once __DIR__ . '/vendor/autoload.php';
+/**
+ * Get all files in a directory, recoursively
+ */
+function fcpGetAllFiles(
+    string $directory,
+    ?string $extension = null
+): array {
+
+    $results = [];
+
+    // Loop through the items, recoursively
+    foreach (glob(untrailingslashit($directory) . '/*') as $dirOrFile) {
+        if (is_dir($dirOrFile)) {
+            $results = array_merge($results, fcpGetAllFiles($dirOrFile, $extension));
+        } elseif (!$extension || pathinfo($dirOrFile, PATHINFO_EXTENSION) === $extension) {
+
+            $results[] = $dirOrFile;
+        }
+    }
+
+    return $results;
 }
+
+/**
+ * Require all files in ./src
+ * Using this instead of composer so that the plugin can also be installed without composer
+ */
+foreach (fcpGetAllFiles(__DIR__ . '/src') as $file) {
+    require_once $file;
+}
+
+// Loop through the files and require them
+foreach ($files as $file) {
+    require_once $file;
+}
+
+// if (is_readable(__DIR__ . '/vendor/autoload.php')) {
+//     require_once __DIR__ . '/vendor/autoload.php';
+// }
 
 FocalPointPicker::init();
 
