@@ -14,7 +14,7 @@ class FocalPointPicker
     {
         add_filter('attachment_fields_to_edit', [self::class, 'attachmentFieldsToEdit'], 10, 2);
         add_action('attachment_fields_to_save', [self::class, 'attachmentFieldsToSave'], 10, 2);
-        add_filter('wp_get_attachment_image_attributes', [self::class, 'filterAttachmentImageAttributes'], 10, 2);
+        add_filter('wp_get_attachment_image_attributes', [self::class, 'wp_get_attachment_image_attributes'], 10, 2);
         add_action('admin_enqueue_scripts', [self::class, 'enqueueAssets']);
     }
 
@@ -48,7 +48,7 @@ class FocalPointPicker
      */
     public static function attachmentFieldsToEdit(
         array $fields,
-        \WP_Post $post
+        WP_Post $post
     ): array {
         if (!wp_attachment_is_image($post)) {
             return $fields;
@@ -132,28 +132,19 @@ class FocalPointPicker
     /**
      * Add the focal point to the image attributes in WordPress image functions
      */
-    public static function filterAttachmentImageAttributes(array $atts, \WP_Post $attachment): array
-    {
-        $focalPoint = get_post_meta($attachment->ID, 'focalpoint', true);
+    public static function wp_get_attachment_image_attributes(
+        array $atts,
+        WP_Post $attachment
+    ): array {
+        $focalPoint = new FocalPoint($attachment);
 
-        if (!is_array($focalPoint)) {
-            return $atts;
+        $atts['class'] ??= '';
+        if (!str_contains($atts['class'], "focal-point-image")) {
+            $atts['class'] .= " focal-point-image";
         }
 
-        if (empty($focalPoint['left']) || empty($focalPoint['top'])) {
-            return $atts;
-        }
+        $atts['style'] = "--focal-point-left: {$focalPoint->left}; --focal-point-top: {$focalPoint->top}";
 
-        $atts['style'] = "object-position: {$focalPoint['left']}% {$focalPoint['top']}%";
         return $atts;
-    }
-
-    /**
-     * Get the focal point of an image.
-     * e.g. ['left' => 0.5, 'top' => 0.5]
-     */
-    public static function getFocalPoint(WP_Post|int $post): FocalPoint
-    {
-        return new FocalPoint($post);
     }
 }

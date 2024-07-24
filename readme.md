@@ -110,3 +110,33 @@ $focus = fcp_get_focalpoint($imageID);
   style="background-position: <?= $focus->leftPercent ?? 50 ?>% <?= $focus->topPercent ?? 50 ?>%;">
 </div>
 ```
+
+### WordPress attachment image
+
+If you are making use of WordPress' function `wp_get_attachment_image($id)`, the plugin will automatically inject two css custom properties for you to use:
+
+```diff
+<img
+  width="150"
+  height="150"
+  src="http://example.com/wp-content/uploads/bear-150x150.png"
++ class="attachment-thumbnail size-thumbnail focal-point-image"
+  alt=""
+  decoding="async"
+  loading="lazy"
++ style="--focal-point-left: 0.46; --focal-point-top: 0.2"
+>
+```
+
+You can use that like this, for example:
+
+```css
+.focal-point-image {
+  aspect-ratio: 16/7; /** or whatever you like */
+  height: auto;
+  object-fit: cover;
+  object-position:
+    calc(var(--focal-point-left, 0.5) * 100%)
+    calc(var(--focal-point-top, 0.5) * 100%);
+}
+```
