@@ -279,16 +279,15 @@
      * Resets the focal point
      */
     reset = () => {
-      const rect = this.img?.getBoundingClientRect();
-      if (!rect) {
+      if (!this.img || !this.imageWrap) {
         console.error("Something went wrong while getting the image rect");
         return;
       }
-      this.animateHandle(rect.width / 2, rect.height / 2).then(() => {
-        this.setHandlePosition(0.5, 0.5);
-        this.applyFocalPointFromHandle();
-        $(this.input).trigger("change");
-      });
+      const rect = this.img.getBoundingClientRect();
+
+      this.setHandlePosition(0.5, 0.5);
+      this.applyFocalPointFromHandle();
+      $(this.input).trigger("change");
     };
 
     /**
