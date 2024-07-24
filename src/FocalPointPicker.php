@@ -60,7 +60,7 @@ class FocalPointPicker
         <focal-point-picker>
             <div data-focalpoint-input-wrap>
                 <input data-focalpoint-input type='text' readonly value="<?php esc_attr_e($focalPoint->left) ?> <?php esc_attr_e($focalPoint->top) ?>" id='focalpoint-input' name='attachments[<?php esc_attr_e($post->ID) ?>][focalpoint]'>
-                <button data-focalpoint-reset disabled type="button" class="button-primary">Reset</button>
+                <button data-focalpoint-reset <?= disabled($focalPoint->hasDefaultValue()) ?> type="button" class="button-primary">Reset</button>
             </div>
 
             <div data-focalpoint-preview aria-hidden="true">

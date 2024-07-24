@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "prepare": "husky",
+    "format:assets": "npx prettier --write '**/*.{js,css}'",
     "format:php": "vendor/bin/php-cs-fixer fix --config .phpcsfixer.config.php --allow-risky=yes",
     "readme:generate": "curl -L https://raw.githubusercontent.com/fumikito/wp-readme/master/wp-readme.php | php"
   },

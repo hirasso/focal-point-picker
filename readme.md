@@ -48,6 +48,14 @@ object(FocalPointPicker\FocalPoint)#2796 (4) {
   float(50)
   ["topPercent"]=>
   float(50)
+  ["x"]=>
+  float(0.5)
+  ["y"]=>
+  float(0.5)
+  ["xPercent"]=>
+  float(50)
+  ["yPercent"]=>
+  float(50)
 }
 ```
 

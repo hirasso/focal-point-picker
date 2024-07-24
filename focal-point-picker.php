@@ -3,7 +3,7 @@
 /**
  * Plugin Name: focal-point-picker
  * Description: Set a custom focal point for your images, directly in the WP media grid
- * Version: 1.2.6
+ * Version: 1.3.0
  * Author: Rasso Hilber
  * Author URI: https://rassohilber.com/
  * Tested up to: 6.7

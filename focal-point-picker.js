@@ -98,20 +98,25 @@
       const mediaModalRoot = this.closest(".media-frame-content");
       const classicRoot = this.closest("#post-body-content");
 
-      this.imageWrap = mediaModalRoot
+      const imageWrap = mediaModalRoot
         ? mediaModalRoot.querySelector(".thumbnail-image")
         : classicRoot
           ? classicRoot.querySelector(".wp_attachment_image p")
           : undefined;
 
-      if (
-        !this.imageWrap ||
-        this.imageWrap.hasAttribute("data-fcp-wrap")
-      ) {
+      if (!imageWrap) {
+        console.error("No imageWrap found", this);
         return;
       }
-      this.imageWrap.setAttribute("data-fcp-wrap", "");
 
+      if (imageWrap.hasAttribute("data-fcp-wrap")) {
+        console.log("already initialized", this);
+        return;
+      }
+
+      imageWrap.setAttribute("data-fcp-wrap", "");
+
+      this.imageWrap = imageWrap;
       this.img = this.imageWrap.querySelector("img");
       if (!this.img) {
         console.error("no image found in imageWrap", this.imageWrap);
@@ -130,7 +135,7 @@
      * @return {void}
      */
     disconnectedCallback() {
-      const { handle, preview, img, resetButton } = this;
+      const { handle, preview, img, imageWrap, resetButton } = this;
 
       if (preview) {
         this.appendChild(preview);
@@ -140,6 +145,9 @@
       }
       if (img) {
         img.removeEventListener("click", this.onImageClick);
+      }
+      if (imageWrap) {
+        imageWrap.removeAttribute("data-fcp-wrap");
       }
       if (resetButton) {
         resetButton.removeEventListener("click", this.reset);
