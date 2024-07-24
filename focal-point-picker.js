@@ -279,7 +279,7 @@
      * Resets the focal point
      */
     reset = () => {
-      const rect = this.imageWrap?.getBoundingClientRect();
+      const rect = this.img?.getBoundingClientRect();
       if (!rect) {
         console.error("Something went wrong while getting the image rect");
         return;
