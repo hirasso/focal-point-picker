@@ -111,9 +111,9 @@ $focus = fcp_get_focalpoint($imageID);
 </div>
 ```
 
-### WordPress attachment image
+### Using `wp_get_attachment_image`
 
-If you are making use of WordPress' function `wp_get_attachment_image($id)`, the plugin will automatically inject two css custom properties for you to use:
+If you are making use of the WordPress function [`wp_get_attachment_image()`](https://developer.wordpress.org/reference/functions/wp_get_attachment_image/), the plugin will automatically inject a class `focal-point-image` and two custom css properties for you to use:
 
 ```diff
 <img
