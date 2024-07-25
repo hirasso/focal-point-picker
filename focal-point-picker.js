@@ -180,13 +180,6 @@
 
       $(handle).on("dblclick", this.reset);
 
-      // $(handle).on("mouseenter", () => this.togglePreview(true));
-      // $(handle).on("mouseleave", () => {
-      //   if (!this.dragging) {
-      //     this.togglePreview(false);
-      //   }
-      // });
-
       $(handle).draggable({
         cancel: "none",
         scroll: false,
@@ -211,7 +204,7 @@
      * @return {void}
      */
     updateUIFromValue = () => {
-      const [left, top] = this.getCurrentValue();
+      const [left, top] = this.getValueFromInput();
       this.setHandlePosition(left, top);
       this.updatePreview(left, top);
       this.adjustResetButton(left, top);
@@ -221,7 +214,7 @@
      * Get the current focal point value from the input
      * @return {number[]} The current focal point values [left, top].
      */
-    getCurrentValue() {
+    getValueFromInput() {
       const { input } = this;
       if (!input) {
         console.error("no input found", { input });
@@ -243,6 +236,29 @@
         }
         return parseFloat(number.toFixed(2));
       });
+    }
+
+    /**
+     * Get the focal point from the handle position
+     * @return {number[]} The focal point values [left, top].
+     */
+    getValueFromHandle() {
+      const { img, handle } = this;
+
+      if (!img) {
+        console.error("missing image", { img });
+        return this.defaultValue;
+      }
+
+      const handleRect = handle.getBoundingClientRect();
+      const imgRect = img.getBoundingClientRect();
+
+      const point = [
+        (handleRect.left - imgRect.left) / imgRect.width,
+        (handleRect.top - imgRect.top) / imgRect.height,
+      ];
+
+      return point.map((number) => parseFloat(number.toFixed(2)));
     }
 
     /**
@@ -326,7 +342,7 @@
      * @return {void}
      */
     applyFocalPointFromHandle = () => {
-      const [left, top] = this.getFocalPointFromHandle();
+      const [left, top] = this.getValueFromHandle();
       this.updateInput(left, top);
       this.updatePreview(left, top);
       this.adjustResetButton(left, top);
@@ -361,29 +377,6 @@
      */
     isDefaultValue(left, top) {
       return left === this.defaultValue[0] && top === this.defaultValue[1];
-    }
-
-    /**
-     * Get the focal point from the handle position
-     * @return {number[]} The focal point values [left, top].
-     */
-    getFocalPointFromHandle() {
-      const { img, handle } = this;
-
-      if (!img) {
-        console.error("missing image", { img });
-        return this.defaultValue;
-      }
-
-      const handleRect = handle.getBoundingClientRect();
-      const imgRect = img.getBoundingClientRect();
-
-      const point = [
-        (handleRect.left - imgRect.left) / imgRect.width,
-        (handleRect.top - imgRect.top) / imgRect.height,
-      ];
-
-      return point.map((number) => parseFloat(number.toFixed(2)));
     }
 
     /**
