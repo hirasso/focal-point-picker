@@ -189,6 +189,7 @@
 
       $(handle).draggable({
         cancel: "none",
+        scroll: false,
         containment: img,
         start: () => {
           this.dragging = true;
