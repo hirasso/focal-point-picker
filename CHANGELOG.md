@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.4
+
+### Patch Changes
+
+- 0735c23: Do not overwrite existing style tag values on native wordpress attachment images
+
 ## 1.3.3
 
 ### Patch Changes
