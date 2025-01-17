@@ -1,8 +1,9 @@
 <?php
 
 /**
- * Plugin Name: WP Focal Point Picker
- * Description: Set a custom focal point for your images, directly in the WP media grid
+ * Plugin Name: Focal Point Picker
+ * Description: Zero-dependency custom focal point picker for your WordPress images 🎯
+ * Plugin URI: https://github.com/hirasso/focal-point-picker
  * Version: 1.3.2
  * Author: Rasso Hilber
  * Author URI: https://rassohilber.com/
