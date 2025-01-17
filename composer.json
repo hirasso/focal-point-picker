@@ -1,26 +1,26 @@
 {
-    "name": "hirasso/focal-point-picker",
-    "description": "A WordPress plugin to set a custom focal point for your images, directly in the WP media grid",
-    "type": "wordpress-plugin",
-    "license": "GPL-3.0-or-later",
-    "authors": [
-        {
-            "name": "Rasso Hilber",
-            "email": "mail@rassohilber.com"
-        }
-    ],
-    "minimum-stability": "stable",
-    "require": {
-      "php": ">=8.2",
-        "composer/installers": "^2.3"
-    },
-    "require-dev": {
-        "symfony/var-dumper": "^7.1",
-        "friendsofphp/php-cs-fixer": "^3.59"
-    },
-    "config": {
-        "allow-plugins": {
-            "composer/installers": true
-        }
+  "name": "hirasso/focal-point-picker",
+  "description": "Zero-dependency custom focal point picker for your WordPress images 🎯",
+  "type": "wordpress-plugin",
+  "license": "GPL-3.0-or-later",
+  "authors": [
+    {
+      "name": "Rasso Hilber",
+      "email": "mail@rassohilber.com"
     }
+  ],
+  "minimum-stability": "stable",
+  "require": {
+    "php": ">=8.2",
+    "composer/installers": "^2.3"
+  },
+  "require-dev": {
+    "symfony/var-dumper": "^7.1",
+    "friendsofphp/php-cs-fixer": "^3.59"
+  },
+  "config": {
+    "allow-plugins": {
+      "composer/installers": true
+    }
+  }
 }
