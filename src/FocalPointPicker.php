@@ -67,7 +67,7 @@ class FocalPointPicker
                 <div data-portrait></div>
                 <div data-landscape></div>
             </div>
-            <button data-focalpoint-handle aria-hidden="true" tabindex="-1" type="button" title="Drag to change. Double-click to reset."></button>
+            <button data-focalpoint-handle tabindex="-1" type="button" title="Drag to change. Double-click to reset."></button>
         </focal-point-picker>
 
 <?php $html = ob_get_clean();

@@ -17,48 +17,27 @@
 use Hirasso\FocalPointPicker\FocalPointPicker;
 use Hirasso\FocalPointPicker\FocalPoint;
 
+/** Exit if accessed directly */
 if (!defined('ABSPATH')) {
     exit;
-} // Exit if accessed directly
+}
 
 define('WPFP_PLUGIN_URI', untrailingslashit(plugin_dir_url(__FILE__)));
 define('WPFP_PLUGIN_DIR', untrailingslashit(__DIR__));
 
 /**
- * Get all files in a directory, recoursively
+ * Require the autoloader
+ * - vendor/autoload.php in development (composer)
+ * - autoload.dist.php in production (not composer)
  */
-function fcpGetAllFiles(
-    string $directory,
-    ?string $extension = null
-): array {
-
-    $results = [];
-
-    // Loop through the items, recoursively
-    foreach (glob(untrailingslashit($directory) . '/*') as $dirOrFile) {
-        if (is_dir($dirOrFile)) {
-            $results = array_merge($results, fcpGetAllFiles($dirOrFile, $extension));
-        } elseif (!$extension || pathinfo($dirOrFile, PATHINFO_EXTENSION) === $extension) {
-
-            $results[] = $dirOrFile;
-        }
-    }
-
-    return $results;
-}
+require_once match(is_readable(__DIR__ . '/vendor/autoload.php')) {
+    true => __DIR__ . '/vendor/autoload.php',
+    default => __DIR__ . '/autoload.dist.php'
+};
 
 /**
- * Require all files in ./src
- * Using this instead of composer so that the plugin can also be installed without composer
+ * Initialize the Admin Functionality
  */
-foreach (fcpGetAllFiles(__DIR__ . '/src') as $file) {
-    require_once $file;
-}
-
-// if (is_readable(__DIR__ . '/vendor/autoload.php')) {
-//     require_once __DIR__ . '/vendor/autoload.php';
-// }
-
 FocalPointPicker::init();
 
 /**

@@ -6,10 +6,17 @@
   "authors": [
     {
       "name": "Rasso Hilber",
-      "email": "mail@rassohilber.com"
+      "email": "mail@rassohilber.com",
+      "homepage": "https://rassohilber.com"
     }
   ],
-  "minimum-stability": "stable",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "autoload": {
+    "psr-4": {
+      "Hirasso\\FocalPointPicker\\": "src/"
+    }
+  },
   "require": {
     "php": ">=8.2",
     "composer/installers": "^2.3"
@@ -19,8 +26,12 @@
     "friendsofphp/php-cs-fixer": "^3.59"
   },
   "config": {
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "sort-packages": true,
     "allow-plugins": {
-      "composer/installers": true
+      "composer/installers": true,
+      "phpstan/extension-installer": true
     }
   }
 }
