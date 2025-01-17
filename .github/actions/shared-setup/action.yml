@@ -4,9 +4,6 @@ inputs:
   php-version:
     description: The PHP version to install
     default: 8.3
-  playwright:
-    description: Should Playwright be installed?
-    default: false
 
 runs:
   using: composite
@@ -17,9 +14,6 @@ runs:
         php-version: ${{ inputs.php-version }}
         tools: composer:v2
         coverage: xdebug
-
-    - name: Install Composer Dependencies
-      uses: ramsey/composer-install@v3
 
     - name: Setup PNPM
       uses: pnpm/action-setup@v4
@@ -35,15 +29,3 @@ runs:
     - name: Install Dependencies
       shell: bash
       run: pnpm install --frozen-lockfile
-
-    - name: Install Playwright
-      if: ${{ inputs.playwright }} == 'true'
-      id: install-playwright
-      uses: ./.github/actions/install-playwright
-
-    - name: Debug Playwright Cache
-      if: ${{ inputs.playwright }} == 'true'
-      shell: bash
-      run: |
-        echo "Playwright version: ${{ steps.install-playwright.outputs.version }}"
-        echo "Playwright cached: ${{ steps.install-playwright.outputs.cache-hit }}"
