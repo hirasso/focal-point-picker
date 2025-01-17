@@ -143,7 +143,8 @@ class FocalPointPicker
             $atts['class'] .= " focal-point-image";
         }
 
-        $atts['style'] = "--focal-point-left: {$focalPoint->left}; --focal-point-top: {$focalPoint->top}";
+        $atts['style'] ??= '';
+        $atts['style'] .= " --focal-point-left: {$focalPoint->left}; --focal-point-top: {$focalPoint->top}; ";
 
         return $atts;
     }
