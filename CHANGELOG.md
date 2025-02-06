@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.6
+
+### Patch Changes
+
+- 0881ed6: Optimize distribution files
+
 ## 1.3.5
 
 ### Patch Changes
