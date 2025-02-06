@@ -17,7 +17,7 @@ composer require hirasso/focal-point-picker
 1. Activate the plugin manually or using WP CLI:
 
 ```shell
-wp plugin activate hirasso/focal-point-picker
+wp plugin activate focal-point-picker
 ```
 
 ### Manually:
