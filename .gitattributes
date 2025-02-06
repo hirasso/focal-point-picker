@@ -12,3 +12,6 @@ composer.json export-ignore
 
 # build tooling
 /bin export-ignore
+
+# markdown files
+*.md export-ignore
