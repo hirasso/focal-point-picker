@@ -1,7 +1,14 @@
+# dotfiles
 .* export-ignore
+
+# js tooling
 package.json export-ignore
 pnpm-lock.yaml export-ignore
-readme.txt export-ignore
+jsconfig.json export-ignore
+
+# php tooling
 composer.lock export-ignore
 composer.json export-ignore
-jsconfig.json export-ignore
+
+# build tooling
+/bin export-ignore
