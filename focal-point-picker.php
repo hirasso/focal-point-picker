@@ -4,7 +4,7 @@
  * Plugin Name: Focal Point Picker
  * Description: Zero-dependency custom focal point picker for your WordPress images 🎯
  * Plugin URI: https://github.com/hirasso/focal-point-picker
- * Version: 1.3.5
+ * Version: 1.3.6
  * Author: Rasso Hilber
  * Author URI: https://rassohilber.com/
  * Tested up to: 6.7
