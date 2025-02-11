@@ -136,6 +136,9 @@ class FocalPointPicker
         array $atts,
         WP_Post $attachment
     ): array {
+        if (!wp_attachment_is_image($attachment)) {
+            return $atts;
+        }
         $focalPoint = new FocalPoint($attachment);
 
         $atts['class'] ??= '';
