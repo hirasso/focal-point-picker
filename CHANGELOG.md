@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.7
+
+### Patch Changes
+
+- 54db62b: Fix `InvalidArgumentException` in the admin media list view. Thanks @cflaschOVL
+
 ## 1.3.6
 
 ### Patch Changes
