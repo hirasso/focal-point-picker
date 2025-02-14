@@ -59,7 +59,7 @@ final class FocalPoint
      */
     private function sanitize(mixed $value): float
     {
-        if (empty($value)) {
+        if (!is_numeric($value) && empty($value)) {
             $value = 0.5;
         }
 
