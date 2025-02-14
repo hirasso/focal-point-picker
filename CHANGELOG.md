@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.8
+
+### Patch Changes
+
+- 4a42788: Prevent resetting coordinates if they are exactly zero. Thanks @elmarinado
+
 ## 1.3.7
 
 ### Patch Changes
