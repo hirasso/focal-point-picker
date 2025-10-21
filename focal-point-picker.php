@@ -49,3 +49,8 @@ if (!function_exists('fcp_get_focalpoint')) {
         return new FocalPoint($post);
     }
 }
+
+/**
+ * Require the Settings and display them in Media Settings.
+ */
+require_once __DIR__ . '/settings.php';

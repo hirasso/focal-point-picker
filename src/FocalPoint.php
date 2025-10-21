@@ -51,7 +51,10 @@ final class FocalPoint
      */
     public function hasDefaultValue(): bool
     {
-        return $this->x === 0.5 && $this->y === 0.5;
+        $default_x = floatval(get_option('fcp_default_x', 0.5));
+        $default_y = floatval(get_option('fcp_default_y', 0.5));
+
+        return abs($this->x - $default_x) < 0.001 && abs($this->y - $default_y) < 0.001;
     }
 
     /**

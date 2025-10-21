@@ -54,7 +54,7 @@
     resetButton;
     /** @type {boolean} dragging */
     dragging = false;
-    defaultValue = [0.5, 0.5];
+    defaultValue = [window.FCPDefaults?.x ?? 0.5, window.FCPDefaults?.y ?? 0.5];
 
     constructor() {
       super();

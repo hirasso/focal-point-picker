@@ -24,7 +24,19 @@ class FocalPointPicker
     public static function enqueueAssets(): void
     {
         wp_enqueue_style('focal-point-picker-css', self::assetUri('/focal-point-picker.css'), [], null);
-        wp_enqueue_script('focal-point-picker-js', self::assetUri('/focal-point-picker.js'), ['jquery', 'jquery-ui-draggable'], null, true);
+        wp_enqueue_script(
+        'focal-point-picker',
+        self::assetUri('focal-point-picker.js'),
+        ['jquery', 'jquery-ui-core'],
+        null,
+        true
+        );
+
+        wp_localize_script('focal-point-picker', 'FCPDefaults', [
+        'x' => floatval(get_option('fcp_default_x', 0.5)),
+        'y' => floatval(get_option('fcp_default_y', 0.5)),
+        ]);
+
     }
 
     /**
