@@ -9,6 +9,8 @@ jsconfig.json export-ignore
 # php tooling
 composer.lock export-ignore
 composer.json export-ignore
+phpstan.neon export-ignore
+pint.json export-ignore
 
 # build tooling
 /bin export-ignore
