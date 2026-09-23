@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.4.1
+
+### Patch Changes
+
+- af2ce12: Declare `Requires PHP: 8.2` in `readme.txt` so that the PHP requirement is actually part of the update metadata reported to WordPress
+- 2f48391: Add phpstan.neon and pint.json to export-ignore
+
 ## 1.4.0
 
 ### Minor Changes
