@@ -1,4 +1,5 @@
 === Focal Point Picker ===
+Requires PHP: 8.2
 
 Zero-dependency custom [focal point](<[url](https://en.wikipedia.org/wiki/Focus_(optics))>) picker for your WordPress images 🎯
 

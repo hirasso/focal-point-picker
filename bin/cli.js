@@ -15,6 +15,7 @@ import {
   patchVersion,
   prepareDistFolder,
   isAtRootDir,
+  validatePHPVersion,
   testDev,
   error,
 } from "./support.js";
@@ -38,6 +39,11 @@ const commands = {
   "release:create": {
     fn: createRelease,
     description: "Create a scoped release",
+  },
+  "validate:php": {
+    fn: validatePHPVersion,
+    description:
+      "Validate that the required PHP version is declared consistently",
   },
   "version:patch": {
     fn: patchVersion,
