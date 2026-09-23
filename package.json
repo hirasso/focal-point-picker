@@ -8,7 +8,8 @@
     "format:assets": "npx prettier --write '**/*.{js,css}'",
     "format:php": "./vendor/bin/pint",
     "analyse": "./vendor/bin/phpstan analyse --memory-limit=2G",
-    "version": "pnpm changeset version && bin/cli.js version:patch"
+    "validate:php": "bin/cli.js validate:php",
+    "version": "pnpm run validate:php && pnpm changeset version && bin/cli.js version:patch"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.11",
